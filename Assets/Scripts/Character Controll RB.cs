@@ -4,34 +4,64 @@ using UnityEngine;
 public class CharacterControllRB : MonoBehaviour
 {
     private Rigidbody rb;
-    private Transform playerCamera;
+    public Transform playerCamera;
+    public Transform feet;
+    public LayerMask groundLayer;
 
-    private Vector2 mouseRotation;
-    private Vector3 moveDirection;
+    private Vector2 mouseInput;
+    private Vector3 movementInput;
+    private float xRot;
 
-    public float walkSpeed = 1;
-    public float sprintSpeed = 2;
-    public float jumpForce = 3;
-    public float xSentetivity;
-    public float ySentetivity;
+    public float walkSpeed = 5;
+    public float sprintSpeed = 10;
+    public float jumpForce = 5;
+    public float xSentetivity = 5;
+    public float ySentetivity = 5;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-        Move();
+        movementInput = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+        mouseInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        MoveCharacter();
+        MoveCamera();
     }
 
-    private void Move()
+    private void MoveCamera()
     {
-        if (Input.GetKey(KeyCode.LeftShift)) moveDirection *= sprintSpeed;
-        else moveDirection *= walkSpeed;
-        rb.MovePosition(moveDirection * Time.deltaTime);
-        rb.linearVelocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z);
+        xRot -= mouseInput.y * ySentetivity;
+        transform.Rotate(0f, mouseInput.x * xSentetivity, 0f);
+        playerCamera.transform.localRotation = Quaternion.Euler(xRot, 0f, 0f);
+    }
+
+    private void MoveCharacter()
+    {
+        Vector3 moveVector;
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            moveVector = transform.TransformDirection(movementInput) * sprintSpeed;
+        }
+        else
+        {
+            moveVector = transform.TransformDirection(movementInput) * walkSpeed;
+        }
+        rb.linearVelocity = new Vector3(moveVector.x, rb.linearVelocity.y, moveVector.z);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (Physics.CheckSphere(feet.position, 0.1f, groundLayer))
+            {
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            }
+            else
+            {
+                Debug.Log("You can't jump while in the air!");
+            }
+        }
     }
 }
