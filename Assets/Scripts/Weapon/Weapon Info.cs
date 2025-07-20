@@ -7,6 +7,7 @@ public class WeaponInfo : ScriptableObject
     [Header("Weapon Settings")]
     public int damage;
     public int bulletsNumber;
+    public float reloadTime;
     public float range;
     public float speed;
     public bool isAuto;

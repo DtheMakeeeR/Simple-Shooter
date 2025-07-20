@@ -11,7 +11,7 @@ public class StandartBullet : MonoBehaviour
     [SerializeField] private LoggerComponent logger;
     public void SetValues(WeaponInfo weaponInfo)
     {
-        damage = weaponInfo.damage = 1;
+        damage = weaponInfo.damage;
         speed = weaponInfo.speed;
         range = weaponInfo.range;
     }
@@ -22,16 +22,19 @@ public class StandartBullet : MonoBehaviour
     }
     public void Fly()
     {
-        transform.Translate(transform.forward * speed * Time.deltaTime, Space.Self);
+        transform.Translate(new Vector3(0, 0, 3) * speed * Time.deltaTime, Space.Self);
         range -= Time.deltaTime * speed;
-        logger.Log($"range:{range}");   
         if (range < 0) Destroy(gameObject);
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.gameObject.tag == "Enemy")
+        logger?.Log("OnTriggerEnter");
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Health>().GetDamage(damage);
+            logger?.Log("OnTriggerEnter == Enemy");
+            other.gameObject.GetComponent<Health>().GetDamage(damage);
+            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 }

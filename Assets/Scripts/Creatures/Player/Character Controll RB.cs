@@ -31,7 +31,7 @@ public class CharacterControllRB : MonoBehaviour
         playerInputActions.Player.Jump.performed += Jump;
         playerInputActions.Player.Sprint.performed += ctx => sprint = true;
         playerInputActions.Player.Sprint.canceled += ctx => sprint = false;
-        playerInputActions.Player.Attack.performed += Shoot;
+        //playerInputActions.Player.Attack.performed += Shoot;
     }
 
     private void Jump(InputAction.CallbackContext context)
