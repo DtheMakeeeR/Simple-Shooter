@@ -33,8 +33,8 @@ public class StandartBullet : MonoBehaviour
         {
             logger?.Log("OnTriggerEnter == Enemy");
             other.gameObject.GetComponent<Health>().GetDamage(damage);
-            gameObject.SetActive(false);
-            Destroy(gameObject);
         }
+        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

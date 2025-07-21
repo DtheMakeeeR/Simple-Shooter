@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 public class Follow : MonoBehaviour
 {
     [Header("Follow Settings")]
-    [SerializeField] private GameObject target;
+    [SerializeField] public GameObject target;
     [SerializeField] private float speed = 5f;
     [SerializeField] private int damage = 1;
     [Header("Logger")]

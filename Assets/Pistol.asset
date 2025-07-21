@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: 
   damage: 1
   bulletsNumber: 1
-  reloadTime: 0.5
+  reloadTime: 0.3
   range: 30
   speed: 20
-  isAuto: 0
+  isAuto: 1

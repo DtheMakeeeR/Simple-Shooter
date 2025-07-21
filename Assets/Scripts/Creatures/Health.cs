@@ -36,6 +36,7 @@ public class Health : MonoBehaviour
         {
             animator.SetTrigger("Die");
             yield return new WaitForSeconds(3);
+            gameObject.SetActive(false);
             Destroy(gameObject);
         }
         else

@@ -103,7 +103,6 @@ public class CharacterControllRB : MonoBehaviour
     }
     private void MoveCharacter()
     {
-        Debug.Log("MoveCharacter");
         Vector3 moveVector;
         if (sprint)
         {
