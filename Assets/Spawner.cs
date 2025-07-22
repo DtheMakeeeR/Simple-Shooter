@@ -13,6 +13,8 @@ public class Spawner : MonoBehaviour
     private void Awake()
     {
         if (minRadius > maxRadius) { minRadius = maxRadius; }
+        entity.target = target.gameObject;
+        entity.logger = logger;
     }
     private IEnumerator Spawn()
     {
@@ -23,7 +25,6 @@ public class Spawner : MonoBehaviour
             if (1 - Random.value < 0.5) randZ *= -1;
             Vector3 spawnPos = new Vector3(randX + target.position.x, target.position.y, randZ + target.position.z);
             Follow f = Instantiate(entity, spawnPos, Quaternion.identity);
-            f.target = target.gameObject;
             logger?.Log($"Spawned on {spawnPos}");
             yield return new WaitForSeconds(spawnRate);
         }

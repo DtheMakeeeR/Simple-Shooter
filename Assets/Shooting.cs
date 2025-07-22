@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 public class Shooting : MonoBehaviour
 {
     /*[SerializeField] private int damage = 1;
@@ -13,7 +14,6 @@ public class Shooting : MonoBehaviour
     [SerializeField] private WeaponInfo info;
     [SerializeField] private Transform bulletPos;
     [SerializeField] private StandartBullet bullet;
-
     [SerializeField] private LoggerComponent logger;
 
     private bool isHoldingFire = false;
@@ -35,6 +35,7 @@ public class Shooting : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
+        bullet.logger = logger;
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Attack.started += ctx => { IsHoldingFire = true; StartShoot();  };
         playerInputActions.Player.Attack.canceled += ctx => IsHoldingFire = false;

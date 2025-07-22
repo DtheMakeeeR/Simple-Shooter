@@ -8,7 +8,7 @@ public class StandartBullet : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float range;
 
-    [SerializeField] private LoggerComponent logger;
+    [SerializeField] public LoggerComponent logger;
     public void SetValues(WeaponInfo weaponInfo)
     {
         damage = weaponInfo.damage;

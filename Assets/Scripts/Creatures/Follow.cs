@@ -10,7 +10,7 @@ public class Follow : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private int damage = 1;
     [Header("Logger")]
-    [SerializeField] private LoggerComponent logger;
+    [SerializeField] public LoggerComponent logger;
     [Header("Components")]
     [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody rb;
@@ -24,9 +24,10 @@ public class Follow : MonoBehaviour
         animator?.SetBool("Moving", true);
         //Debug.Log($"Target pos:{target.transform.position}");
         transform.LookAt(target.transform.position, Vector3.up);
-        Vector3 direction = transform.forward * speed;
+        Vector3 direction = transform.InverseTransformVector(new Vector3(0, 0, 1)) * speed;
         direction.y = 0;
         rb.linearVelocity = direction;
+        logger.Log($"{gameObject} velocity = {direction}");
     }
     private void OnCollisionEnter(Collision collision)
     {
