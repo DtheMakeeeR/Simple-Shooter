@@ -32,7 +32,7 @@ public class Follow : MonoBehaviour
         );
         Vector3 direction = (tPos - transform.position).normalized * speed;
         direction.y = transform.position.y > 0 ? -1 : 0;
-        rb.AddForce(direction, ForceMode.Acceleration);
+        rb.AddForce(direction, ForceMode.VelocityChange);
     }
     private void OnCollisionEnter(Collision collision)
     {

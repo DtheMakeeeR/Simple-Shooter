@@ -4,13 +4,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 public class Shooting : MonoBehaviour
 {
-    /*[SerializeField] private int damage = 1;
-    [SerializeField] private int bulletsNumber = 1;
-    [SerializeField] private float reloadSpeed;
-    [SerializeField] private float range;
-    [SerializeField] private float speed;
-    [SerializeField] private bool isAuto = false;
-    [SerializeField] private string weaponName;*/
     [SerializeField] private WeaponInfo info;
     [SerializeField] private Transform bulletPos;
     [SerializeField] private StandartBullet bullet;
@@ -19,6 +12,9 @@ public class Shooting : MonoBehaviour
     private bool isHoldingFire = false;
     private bool isReloading = false;
     private Coroutine coroutine;
+
+
+    PlayerInputActions playerInputActions;
     private bool IsHoldingFire
     {
         get
@@ -31,8 +27,7 @@ public class Shooting : MonoBehaviour
             isHoldingFire = value;
         }
     }
-    PlayerInputActions playerInputActions;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    #region messages
     private void Awake()
     {
         bullet.logger = logger;
@@ -40,6 +35,7 @@ public class Shooting : MonoBehaviour
         playerInputActions.Player.Attack.started += ctx => { IsHoldingFire = true; StartShoot();  };
         playerInputActions.Player.Attack.canceled += ctx => IsHoldingFire = false;
     }
+    
     private void OnEnable()
     {
         playerInputActions.Enable();
@@ -52,30 +48,44 @@ public class Shooting : MonoBehaviour
     {
         bullet.SetValues(info);
     }
-    //private IEnumerator Reload()
-    //{
-    //    isReloading = true;
-    //    yield return new WaitForSeconds(info.reloadTime);
-    //    isReloading = false;
-    //}
+    #endregion
     private void StartShoot()
     {
         if (coroutine != null) return;
         else coroutine = StartCoroutine(Shoot());
     }
+    private void StartReload()
+    {
+        if (coroutine != null) StopCoroutine(coroutine);
+        StopCoroutine(Reload());
+    }
+    private IEnumerator Reload()
+    {
+        logger?.Log("Reload");
+        yield return new WaitForSeconds(info.reloadSpeed);
+        coroutine = null;
+    }
     private IEnumerator Shoot()
     {
         logger?.Log("Shoot");
-        int flag = 0;
         if (info.isAuto) while (isHoldingFire)
             {
-                flag++;
-                if (flag == 100) yield break;
                 if (!isReloading)
                 {
                     Instantiate(bullet, bulletPos.position, bulletPos.rotation);
+                    for(int i = 1; i < info.bulletsNumber; i++)
+                    {
+                        float spreadAngle = info.spreadRadius * i;
+                        Quaternion spreadRotation = Quaternion.Euler(0, spreadAngle, 0);
+                        Quaternion finalRotation = bulletPos.rotation * spreadRotation;
+                        Instantiate(bullet, bulletPos.position, finalRotation);
+                        spreadAngle = -info.spreadRadius * i;
+                        spreadRotation = Quaternion.Euler(0, spreadAngle, 0);
+                        finalRotation = bulletPos.rotation * spreadRotation;
+                        Instantiate(bullet, bulletPos.position, finalRotation);
+                    }
                     isReloading = true;
-                    yield return new WaitForSeconds(info.reloadTime);
+                    yield return new WaitForSeconds(info.shootingSpeed);
                     isReloading = false;
                 }
             }
@@ -83,7 +93,7 @@ public class Shooting : MonoBehaviour
         {
             Instantiate(bullet, bulletPos.position, bulletPos.rotation);
             isReloading = true;
-            yield return new WaitForSeconds(info.reloadTime);
+            yield return new WaitForSeconds(info.shootingSpeed);
             isReloading = false;
         }
         coroutine = null;

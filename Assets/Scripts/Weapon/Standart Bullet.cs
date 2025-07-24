@@ -8,6 +8,7 @@ public class StandartBullet : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float range;
     [SerializeField] private float force;
+    [SerializeField] private int penetration;
 
     [SerializeField] public LoggerComponent logger;
     public void SetValues(WeaponInfo weaponInfo)
@@ -16,6 +17,7 @@ public class StandartBullet : MonoBehaviour
         speed = weaponInfo.speed;
         range = weaponInfo.range;
         force = weaponInfo.force;
+        penetration = weaponInfo.penetration;
     }
 
     void Update()
@@ -31,6 +33,7 @@ public class StandartBullet : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         logger?.Log("OnTriggerEnter");
+        if (other.gameObject.CompareTag("Player")) return;
         if (other.gameObject.CompareTag("Enemy"))
         {
             logger?.Log("OnTriggerEnter == Enemy");
@@ -40,7 +43,16 @@ public class StandartBullet : MonoBehaviour
         {
             other.attachedRigidbody.AddForce(transform.forward * force, ForceMode.Impulse);
         }
-        gameObject.SetActive(false);
-        Destroy(gameObject);
+        logger?.Log("Exit Trigger");
+        penetration--;
+        if (penetration < 0)
+        {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        
     }
 }

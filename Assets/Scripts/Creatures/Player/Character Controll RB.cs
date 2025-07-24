@@ -13,6 +13,7 @@ public class CharacterControllRB : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed = 5;
     [SerializeField] private float sprintSpeed = 10;
+    [SerializeField] private float dashPower;
     private bool sprint;
 
     [Header("Jump Settings")]
@@ -78,6 +79,14 @@ public class CharacterControllRB : MonoBehaviour
                     Debug.Log("Попал не во врага, а в: " + hit.collider.gameObject.name + " с тегом: " + hit.collider.tag);
                 }
             }
+    }
+    private void Dash(InputAction.CallbackContext ctx)
+    {
+        rb.AddForce(movementInput*dashPower, ForceMode.Impulse);
+        if (rb.linearVelocity.magnitude > 10f)
+        {
+            rb.linearVelocity = movementInput * 10f;
+        }
     }
     private void TurnToMouse()
     {
