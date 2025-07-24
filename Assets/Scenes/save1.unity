@@ -1619,7 +1619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd3dea53c1f0f942b0a53a3c5f89abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  needToLog: 0
+  needToLog: 1
   groupName: Bullet
   color: 3
 --- !u!4 &1481135715

@@ -34,6 +34,7 @@ public class Shooting : MonoBehaviour
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Attack.started += ctx => { IsHoldingFire = true; StartShoot();  };
         playerInputActions.Player.Attack.canceled += ctx => IsHoldingFire = false;
+        playerInputActions.Player.Reload.started += ctx => StartReload();
     }
     
     private void OnEnable()
@@ -57,12 +58,13 @@ public class Shooting : MonoBehaviour
     private void StartReload()
     {
         if (coroutine != null) StopCoroutine(coroutine);
-        StopCoroutine(Reload());
+        coroutine = StartCoroutine(Reload());
     }
     private IEnumerator Reload()
     {
-        logger?.Log("Reload");
+        logger?.Log("Start Reload");
         yield return new WaitForSeconds(info.reloadSpeed);
+        logger?.Log("End Reload");
         coroutine = null;
     }
     private IEnumerator Shoot()
@@ -72,18 +74,8 @@ public class Shooting : MonoBehaviour
             {
                 if (!isReloading)
                 {
-                    Instantiate(bullet, bulletPos.position, bulletPos.rotation);
-                    for(int i = 1; i < info.bulletsNumber; i++)
-                    {
-                        float spreadAngle = info.spreadRadius * i;
-                        Quaternion spreadRotation = Quaternion.Euler(0, spreadAngle, 0);
-                        Quaternion finalRotation = bulletPos.rotation * spreadRotation;
-                        Instantiate(bullet, bulletPos.position, finalRotation);
-                        spreadAngle = -info.spreadRadius * i;
-                        spreadRotation = Quaternion.Euler(0, spreadAngle, 0);
-                        finalRotation = bulletPos.rotation * spreadRotation;
-                        Instantiate(bullet, bulletPos.position, finalRotation);
-                    }
+
+                    MakeBullets();
                     isReloading = true;
                     yield return new WaitForSeconds(info.shootingSpeed);
                     isReloading = false;
@@ -91,11 +83,26 @@ public class Shooting : MonoBehaviour
             }
         else if (!isReloading)
         {
-            Instantiate(bullet, bulletPos.position, bulletPos.rotation);
-            isReloading = true;
+            MakeBullets();
+            isReloading = true; 
             yield return new WaitForSeconds(info.shootingSpeed);
             isReloading = false;
         }
         coroutine = null;
+    }
+    private void MakeBullets()
+    {
+        Instantiate(bullet, bulletPos.position, bulletPos.rotation);
+        for (int i = 1; i < info.bulletsNumber; i++)
+        {
+            float spreadAngle = info.spreadRadius * i;
+            Quaternion spreadRotation = Quaternion.Euler(0, spreadAngle, 0);
+            Quaternion finalRotation = bulletPos.rotation * spreadRotation;
+            Instantiate(bullet, bulletPos.position, finalRotation);
+            spreadAngle = -info.spreadRadius * i;
+            spreadRotation = Quaternion.Euler(0, spreadAngle, 0);
+            finalRotation = bulletPos.rotation * spreadRotation;
+            Instantiate(bullet, bulletPos.position, finalRotation);
+        }
     }
 }
