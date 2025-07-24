@@ -18,4 +18,5 @@ MonoBehaviour:
   reloadTime: 0.3
   range: 30
   speed: 20
+  force: 5
   isAuto: 1

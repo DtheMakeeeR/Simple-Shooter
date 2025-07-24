@@ -10,5 +10,6 @@ public class WeaponInfo : ScriptableObject
     public float reloadTime;
     public float range;
     public float speed;
+    public float force;
     public bool isAuto;
 }

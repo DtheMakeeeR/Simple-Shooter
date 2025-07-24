@@ -7,6 +7,7 @@ public class StandartBullet : MonoBehaviour
     [SerializeField] private int damage;
     [SerializeField] private float speed;
     [SerializeField] private float range;
+    [SerializeField] private float force;
 
     [SerializeField] public LoggerComponent logger;
     public void SetValues(WeaponInfo weaponInfo)
@@ -14,6 +15,7 @@ public class StandartBullet : MonoBehaviour
         damage = weaponInfo.damage;
         speed = weaponInfo.speed;
         range = weaponInfo.range;
+        force = weaponInfo.force;
     }
 
     void Update()
@@ -33,6 +35,10 @@ public class StandartBullet : MonoBehaviour
         {
             logger?.Log("OnTriggerEnter == Enemy");
             other.gameObject.GetComponent<Health>().GetDamage(damage);
+        }
+        if(other.attachedRigidbody != null)
+        {
+            other.attachedRigidbody.AddForce(transform.forward * force, ForceMode.Impulse);
         }
         gameObject.SetActive(false);
         Destroy(gameObject);
