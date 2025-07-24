@@ -10,7 +10,7 @@ public class Health : MonoBehaviour
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 3;
     [Header("Logger")]
-    [SerializeField] private LoggerComponent logger;
+    [SerializeField] public LoggerComponent logger;
     [Header("Animator")]
     [SerializeField] private Animator animator;
     private int health;
@@ -25,23 +25,15 @@ public class Health : MonoBehaviour
         logger?.Log($"{gameObject.name} took {damage} damage. Remaining health: {health}");
         if (health <= 0)
         {
-            StartCoroutine("Die");
+            animator.SetTrigger("Die");
         }
     }
-
-    private IEnumerator Die()
+    public void Die()
     {
-        logger.Log($"{gameObject.name} has died.");
-        if (animator != null)
-        {
-            animator.SetTrigger("Die");
-            yield return new WaitForSeconds(3);
-            gameObject.SetActive(false);
-            Destroy(gameObject);
-        }
-        else
-        {
-            logger.LogWarning("Animator component not found on " + gameObject.name);
-        }
+        logger?.Log($"{gameObject.name} has died");
+        gameObject.SetActive(false);
+        Destroy(gameObject);
+        
+        logger?.LogWarning("Animator component not found on " + gameObject.name);
     }
 }
