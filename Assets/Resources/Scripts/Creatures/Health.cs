@@ -25,7 +25,6 @@ public class Health : MonoBehaviour
         logger?.Log($"{gameObject.name} took {damage} damage. Remaining health: {health}");
         if (health <= 0)
         {
-            if (gameObject.CompareTag("Player")) Die();
             animator.SetTrigger("Die");
         }
     }

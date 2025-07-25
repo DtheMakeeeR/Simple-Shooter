@@ -90,6 +90,7 @@ public class CharacterControllRB : MonoBehaviour
     }
     private void TurnToMouse()
     {
+
         if (!IsMouseInsideWindow() ) return;
         Ray cRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         Vector3 nPos = transform.position;
