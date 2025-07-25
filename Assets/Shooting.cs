@@ -12,7 +12,7 @@ public class Shooting : MonoBehaviour
     private bool isHoldingFire = false;
     private bool isReloading = false;
     private Coroutine coroutine;
-
+    private int clipSize;
 
     PlayerInputActions playerInputActions;
     private bool IsHoldingFire
@@ -35,6 +35,7 @@ public class Shooting : MonoBehaviour
         playerInputActions.Player.Attack.started += ctx => { IsHoldingFire = true; StartShoot();  };
         playerInputActions.Player.Attack.canceled += ctx => IsHoldingFire = false;
         playerInputActions.Player.Reload.started += ctx => StartReload();
+        clipSize = info.clipSize;
     }
     
     private void OnEnable()
@@ -57,36 +58,32 @@ public class Shooting : MonoBehaviour
     }
     private void StartReload()
     {
-        if (coroutine != null) StopCoroutine(coroutine);
+        if (coroutine != null && !isReloading) StopCoroutine(coroutine);
+        if (coroutine != null && isReloading) return;
         coroutine = StartCoroutine(Reload());
     }
     private IEnumerator Reload()
     {
         logger?.Log("Start Reload");
+        isReloading = true;
         yield return new WaitForSeconds(info.reloadSpeed);
+        isReloading = false;
+        clipSize= info.clipSize;
         logger?.Log("End Reload");
         coroutine = null;
     }
     private IEnumerator Shoot()
     {
         logger?.Log("Shoot");
-        if (info.isAuto) while (isHoldingFire)
+        if (info.isAuto) while (isHoldingFire && clipSize != 0)
             {
-                if (!isReloading)
-                {
-
-                    MakeBullets();
-                    isReloading = true;
-                    yield return new WaitForSeconds(info.shootingSpeed);
-                    isReloading = false;
-                }
+                MakeBullets();
+                yield return new WaitForSeconds(info.shootingSpeed);
             }
-        else if (!isReloading)
+        else if (clipSize != 0) 
         {
             MakeBullets();
-            isReloading = true; 
             yield return new WaitForSeconds(info.shootingSpeed);
-            isReloading = false;
         }
         coroutine = null;
     }
@@ -104,5 +101,7 @@ public class Shooting : MonoBehaviour
             finalRotation = bulletPos.rotation * spreadRotation;
             Instantiate(bullet, bulletPos.position, finalRotation);
         }
+        clipSize--;
+        logger?.Log($"Remaining bullets:{clipSize}");
     }
 }

@@ -16,8 +16,8 @@ MonoBehaviour:
   damage: 1
   range: 30
   spreadRadius: 5
-  magazineSize: 5
-  bulletsNumber: 5
+  clipSize: 5
+  bulletsNumber: 2
   shootingSpeed: 0.3
   reloadSpeed: 1
   isAuto: 1
