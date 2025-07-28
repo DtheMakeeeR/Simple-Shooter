@@ -1,10 +1,9 @@
-using System.Collections;
 using UnityEngine;
-
-public abstract class Spawner : MonoBehaviour
+using System.Collections;
+public class NavMeshSpawner : MonoBehaviour
 {
     [Header("Entities")]
-    [SerializeField] protected Follow entity;
+    [SerializeField] protected FollowNavMesh entity;
     [SerializeField] protected Transform target;
     [SerializeField] protected LoggerComponent logger;
 
@@ -37,24 +36,24 @@ public abstract class Spawner : MonoBehaviour
         entity.logger = logger;
         entity.gameObject.GetComponent<Health>().logger = logger;
     }
-    protected abstract IEnumerator Spawn();
-    //{
-        //while(true){
-        //    float randX = Random.Range(minRadius, maxRadius);
-        //    float randZ = Random.Range(minRadius, maxRadius);
-        //    if (1 - Random.value < 0.5) randX *= -1;
-        //    if (1 - Random.value < 0.5) randZ *= -1;
-        //    Vector3 spawnPos = new Vector3(randX + target.position.x, target.position.y, randZ + target.position.z);
-        //    Follow f = Instantiate(entity, spawnPos, Quaternion.identity);
-        //    f.speed = startSpeed;
-        //    logger?.Log($"Spawned on {spawnPos}");
-        //    yield return new WaitForSeconds(spawnRate);
-        //}
-    //}
+    protected IEnumerator Spawn()
+    {
+        while(true){
+            float randX = Random.Range(minRadius, maxRadius);
+            float randZ = Random.Range(minRadius, maxRadius);
+            if (1 - Random.value < 0.5) randX *= -1;
+            if (1 - Random.value < 0.5) randZ *= -1;
+            Vector3 spawnPos = new Vector3(randX + target.position.x, target.position.y, randZ + target.position.z);
+            FollowNavMesh f = Instantiate(entity, spawnPos, Quaternion.identity);   
+            f.Speed = startSpeed;
+            logger?.Log($"Spawned on {spawnPos}");
+            yield return new WaitForSeconds(spawnRate);
+        }
+    }
     private IEnumerator Scale()
     {
-        while(true)
-        { 
+        while (true)
+        {
             yield return new WaitForSeconds(timeToIncrease);
             logger?.Log($"{gameObject.name} is Scaling");
             startSpeed += startSpeed * speedIncrease;
@@ -63,5 +62,4 @@ public abstract class Spawner : MonoBehaviour
     }
 
     // Update is called once per frame
-
 }

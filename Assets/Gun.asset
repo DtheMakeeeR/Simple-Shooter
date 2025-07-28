@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0ea0e4f795502847a3e25cc91f1eb90, type: 3}
-  m_Name: Pistol
+  m_Name: Gun
   m_EditorClassIdentifier: 
   weaponName: 
   damage: 1
@@ -22,5 +22,5 @@ MonoBehaviour:
   reloadSpeed: 1
   isAuto: 1
   speed: 5
-  penetration: 0
-  force: 1
+  penetration: 1
+  force: 5

@@ -8,7 +8,7 @@ public class WeaponInfo : ScriptableObject
     [Header("Basic")]
     public int damage;
     public float range;
-    public int spreadRadius;
+    public float spreadRadius;
     public int clipSize;
     public int bulletsNumber;
     [Header("Shooting Speed")]

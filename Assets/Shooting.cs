@@ -79,11 +79,21 @@ public class Shooting : MonoBehaviour
             {
                 MakeBullets();
                 yield return new WaitForSeconds(info.shootingSpeed);
+                if (clipSize <= 0 && !isReloading)
+                {
+                    logger?.Log("Clip is empty, start reloading");
+                    StartReload();
+                }
             }
         else if (clipSize != 0) 
         {
             MakeBullets();
             yield return new WaitForSeconds(info.shootingSpeed);
+        }
+        else
+        {
+            logger?.Log("Clip is empty, start reloading");
+            StartReload();
         }
         coroutine = null;
     }

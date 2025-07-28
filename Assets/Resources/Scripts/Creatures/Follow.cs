@@ -32,8 +32,8 @@ public class Follow : MonoBehaviour
         );
         Vector3 direction = (tPos - transform.position).normalized * speed;
         direction.y = transform.position.y > 0 ? -1 : 0;
-        //rb.AddForce(direction, ForceMode.Acceleration);
-        rb.linearVelocity = direction;
+        rb.AddForce(direction * Time.deltaTime, ForceMode.VelocityChange);
+        //rb.linearVelocity = direction;
     }
     private void OnCollisionEnter(Collision collision)
     {
