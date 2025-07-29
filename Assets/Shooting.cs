@@ -23,7 +23,7 @@ public class Shooting : MonoBehaviour
         }
         set
         {
-            logger?.Log($"IsHoldingFire ={value}");
+            //logger?.Log($"IsHoldingFire ={value}");
             isHoldingFire = value;
         }
     }
@@ -53,7 +53,7 @@ public class Shooting : MonoBehaviour
     #endregion
     private void StartShoot()
     {
-        if (coroutine != null) return;
+        if (coroutine != null || isReloading) return;
         else coroutine = StartCoroutine(Shoot());
     }
     private void StartReload()
@@ -81,7 +81,7 @@ public class Shooting : MonoBehaviour
                 yield return new WaitForSeconds(info.shootingSpeed);
                 if (clipSize <= 0 && !isReloading)
                 {
-                    logger?.Log("Clip is empty, start reloading");
+                    logger?.Log("AUTO Clip is empty, start reloading");
                     StartReload();
                 }
             }
@@ -90,9 +90,9 @@ public class Shooting : MonoBehaviour
             MakeBullets();
             yield return new WaitForSeconds(info.shootingSpeed);
         }
-        else
+        else if(!isReloading)
         {
-            logger?.Log("Clip is empty, start reloading");
+            logger?.Log("SEMI Clip is empty, start reloading");
             StartReload();
         }
         coroutine = null;

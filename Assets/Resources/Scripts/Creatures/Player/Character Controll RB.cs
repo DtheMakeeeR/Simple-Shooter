@@ -14,6 +14,7 @@ public class CharacterControllRB : MonoBehaviour
     [SerializeField] private float walkSpeed = 5;
     [SerializeField] private float sprintSpeed = 10;
     [SerializeField] private float dashPower;
+    [SerializeField] private float rotationSpeed;
     private bool sprint;
 
     [Header("Jump Settings")]
@@ -63,40 +64,18 @@ public class CharacterControllRB : MonoBehaviour
 
     // Update is called once per frame
 
-    private void Shoot(InputAction.CallbackContext ctx)
-    {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position + transform.forward * 0.5f + new Vector3(0, 1, 0), transform.forward, out hit))
-            {
-                Debug.DrawRay(transform.position + transform.forward * 0.5f, transform.forward * hit.distance, Color.green, 1f);
-                if (hit.collider.CompareTag("Enemy"))
-                {
-                    Health enemyHealth = hit.collider.GetComponent<Health>();
-                    enemyHealth?.GetDamage(damage);
-                }
-                else
-                {
-                    Debug.Log("Попал не во врага, а в: " + hit.collider.gameObject.name + " с тегом: " + hit.collider.tag);
-                }
-            }
-    }
-    private void Dash(InputAction.CallbackContext ctx)
-    {
-        rb.AddForce(movementInput*dashPower, ForceMode.Impulse);
-        if (rb.linearVelocity.magnitude > 10f)
-        {
-            rb.linearVelocity = movementInput * 10f;
-        }
-    }
     private void TurnToMouse()
     {
 
         if (!IsMouseInsideWindow() ) return;
         Ray cRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         Vector3 nPos = transform.position;
-        if (Physics.Raycast(cRay, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(cRay, out RaycastHit hit))
         {
             nPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+            Vector3 direction = nPos - transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(nPos - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
         }
         transform.LookAt(nPos, Vector3.up);
@@ -122,6 +101,7 @@ public class CharacterControllRB : MonoBehaviour
         {
             moveVector = (movementInput) * walkSpeed;
         }
+        moveVector = transform.TransformDirection(moveVector);
         rb.linearVelocity = new Vector3(moveVector.x, rb.linearVelocity.y, moveVector.z);
     }
 }

@@ -15,12 +15,12 @@ MonoBehaviour:
   weaponName: 
   damage: 1
   range: 30
-  spreadRadius: 5
-  clipSize: 5
-  bulletsNumber: 2
-  shootingSpeed: 0.3
+  spreadRadius: 0.5
+  clipSize: 2
+  bulletsNumber: 10
+  shootingSpeed: 0.1
   reloadSpeed: 1
-  isAuto: 1
-  speed: 5
-  penetration: 1
-  force: 5
+  isAuto: 0
+  speed: 10
+  penetration: 0
+  force: 3
