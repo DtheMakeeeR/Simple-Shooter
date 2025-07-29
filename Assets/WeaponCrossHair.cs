@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CrosshairMove : MonoBehaviour
+public class WeaponCrossHair : MonoBehaviour
 {
     private Vector3 velocity = Vector3.zero;
     [SerializeField] private float smoothTime = 0f;
@@ -15,7 +15,7 @@ public class CrosshairMove : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         LayerMask filteredMask = ~ignore;
-        if(Physics.Raycast(ray, out RaycastHit hitInfo))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, filteredMask))
         {
             Vector3 nPos = hitInfo.point;
             transform.position = Vector3.SmoothDamp(transform.position, nPos, ref velocity, smoothTime);

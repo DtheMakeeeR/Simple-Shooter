@@ -5,10 +5,7 @@ public class RotateWeapon : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private float rotationSpeed = 1f;
-    void Start()
-    {
-
-    }
+    [SerializeField] private Transform crossHair;
 
     // Update is called once per frame
     void Update()
@@ -28,4 +25,12 @@ public class RotateWeapon : MonoBehaviour
         }
         Debug.DrawRay(transform.position, hit.point - transform.position);
     }    
+    private void RotateToCH()
+    {
+        Vector3 targetPosition = crossHair.position;
+        Debug.DrawRay(Camera.main.transform.position, targetPosition - Camera.main.transform.position);
+        Vector3 direction = targetPosition - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
 }
