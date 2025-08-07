@@ -8,7 +8,7 @@ public class CharacterControllRB : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private Transform playerCamera;
+    [SerializeField] private Transform crossHair;
     [SerializeField] private Transform feet;
     [SerializeField] private LayerMask groundLayer;
 
@@ -89,17 +89,19 @@ public class CharacterControllRB : MonoBehaviour
     private void TurnToMouse()
     {
 
-        if (!IsMouseInsideWindow() ) return;
-        Ray cRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Vector3 nPos = transform.position;
-        if (Physics.Raycast(cRay, out RaycastHit hit))
-        {
-            nPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            Vector3 direction = nPos - transform.position;
-            Quaternion targetRotation = Quaternion.LookRotation(nPos - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        //if (!IsMouseInsideWindow() ) return;
+        //Ray cRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //Vector3 nPos = transform.position;
+        //if (Physics.Raycast(cRay, out RaycastHit hit))
+        //{
+        //    nPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+        //    Vector3 direction = nPos - transform.position;
+        //    Quaternion targetRotation = Quaternion.LookRotation(nPos - transform.position);
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
-        }
+        //}
+        Vector3 nPos = crossHair.transform.position;
+        nPos.y = transform.position.y;
         transform.LookAt(nPos, Vector3.up);
     }
     public void CalcInput(InputAction.CallbackContext ctx)
