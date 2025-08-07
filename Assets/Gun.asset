@@ -16,11 +16,11 @@ MonoBehaviour:
   damage: 1
   range: 30
   spreadRadius: 0.5
-  clipSize: 2
-  bulletsNumber: 10
+  clipSize: 30
+  bulletsNumber: 1
   shootingSpeed: 0.1
   reloadSpeed: 1
-  isAuto: 0
+  isAuto: 1
   speed: 10
   penetration: 0
   force: 3

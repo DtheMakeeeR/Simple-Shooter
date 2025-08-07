@@ -1,10 +1,12 @@
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class CharacterControllRB : MonoBehaviour
 {
-    [Header("Regerences")]
+    [Header("References")]
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Transform playerCamera;
     [SerializeField] private Transform feet;
@@ -20,6 +22,7 @@ public class CharacterControllRB : MonoBehaviour
     [Header("Jump Settings")]
     public float jumpForce = 5;
 
+
     public int damage = 1;
     private Vector2 mouseInput;
     private Vector3 movementInput;
@@ -28,16 +31,35 @@ public class CharacterControllRB : MonoBehaviour
     private void Awake()
     {
         playerInputActions = new PlayerInputActions();
-        playerInputActions.Player.Move.performed += CalcInput;
-        playerInputActions.Player.Move.canceled += CalcInput;
-        playerInputActions.Player.Jump.performed += Jump;
-        playerInputActions.Player.Sprint.performed += ctx => sprint = true;
-        playerInputActions.Player.Sprint.canceled += ctx => sprint = false;
+        //playerInputActions.Player.Move.performed += CalcInput;
+        //playerInputActions.Player.Move.canceled += CalcInput;
+        //playerInputActions.Player.Jump.performed += Jump;
+        //playerInputActions.Player.Sprint.performed += ctx => sprint = true;
+        //playerInputActions.Player.Sprint.canceled += ctx => sprint = false;
         //playerInputActions.Player.Attack.performed += Shoot;
     }
 
-    private void Jump(InputAction.CallbackContext context)
+    public void Sprint(InputAction.CallbackContext ctx)
     {
+        if(ctx.performed) sprint = true;
+        else sprint = false;
+    }
+    public void HideCursor(InputAction.CallbackContext ctx)
+    {
+        if(Cursor.visible)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+    }
+    public void Jump(InputAction.CallbackContext ctx)
+    {
+
         if (Physics.CheckSphere(feet.position, 0.1f, groundLayer))
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -101,7 +123,7 @@ public class CharacterControllRB : MonoBehaviour
         {
             moveVector = (movementInput) * walkSpeed;
         }
-        moveVector = transform.TransformDirection(moveVector);
+        //moveVector = transform.TransformDirection(moveVector);
         rb.linearVelocity = new Vector3(moveVector.x, rb.linearVelocity.y, moveVector.z);
     }
 }
